@@ -3,7 +3,8 @@
  * Module dependencies.
  */
 
-var express = require('express'),
+var api     = require('./routes/api.js'),
+    express = require('express'),
     http    = require('http'),
     omni    = require('omni-di'),
     path    = require('path');
@@ -32,6 +33,12 @@ app.get('/', function(FoodItem) {
     });
   };
 }.inject(di));
+
+// API routes
+app.get('/api/day/:date', api.day.get.inject(di));
+app.get('/api/food/search/:search', api.searchFood.inject(di));
+
+app.put('/api/day/:date', api.day.put.inject(di));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
