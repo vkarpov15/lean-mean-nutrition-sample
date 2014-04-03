@@ -36,3 +36,34 @@ a {
   background-color: #ddd;
   height: 100%;
 }
+
+.dashboard-wrapper {
+  margin: 10px;
+  border: 1px solid #666;
+}
+
+.dashboard-blue {
+  background-color: #BDFCFC;
+  padding: 10px;
+  text-align: center;
+}
+
+.dashboard-pink {
+  background-color: #FFBAF2;
+  padding: 10px;
+  text-align: center;
+}
+
+.day-food-item {
+  padding: 5px;
+  border-bottom: 1px dashed #666;
+  font-size: 16px;
+}
+
+.day-food-item input {
+  width: 40px;
+}
+
+.track-save-button {
+  background-color: #FFBAF2;
+}

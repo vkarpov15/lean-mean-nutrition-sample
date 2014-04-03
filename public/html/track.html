@@ -1,16 +1,84 @@
 <div class="row" style="min-height: 1000px">
   <div class="col-lg-3 track-left">
     <h3>Add New Food</h3>
+    <input  type="text"
+            ng-model="searchText"
+            class="form-control"
+            placeholder="Search"
+            ng-change="search(searchText)">
+    <div ng-show="searchLoading">
+      <h4>Loading...</h4>
+    </div>
+    <div ng-show="!!searchResults && !searchLoading">
+      <div  ng-repeat="result in searchResults"
+            class="food-autocomplete-result"
+            ng-click="addFood(result)">
+        {{ result.description }}
+      </div>
+    </div>
   </div>
   <div class="col-lg-9 track-right">
     <h2 style="text-align: center">
       <i  class="fa fa-arrow-left"
-          style="cursor: pointer">
+          style="cursor: pointer"
+          ng-click="previousDate()">
       </i>
-      Food Journal for <em>Today</em>
+      Food Journal for <em>{{ displayDate() }}</em>
       <i  class="fa fa-arrow-right"
-          style="cursor: pointer">
+          style="cursor: pointer"
+          ng-click="nextDate()">
       </i>
     </h2>
+    <div ng-show="dayLoading">
+      <h4>
+        Loading...
+      </h4>
+    </div>
+    <div ng-show="!dayLoading">
+      <div ng-show="isNew">
+        <h4>
+          No data for this day. Enter some on the left!
+        </h4>
+      </div>
+      <div ng-show="!isNew">
+        <div class="row dashboard-wrapper">
+          <div class="col-lg-4 dashboard-blue">
+            <h2>{{ computed.calories.toFixed(0) }}</h2>
+            <h4>Calories</h4>
+          </div>
+          <div class="col-lg-4 dashboard-pink">
+            <h2>{{ computed.carbs.toFixed(0) }}</h2>
+            <h4>Carbs</h4>
+          </div>
+          <div class="col-lg-4 dashboard-blue">
+            <h2>{{ (computed.omega3 / (computed.omega6 || 1)).toFixed(1) }}</h2>
+            <h4>Omega-3/Omega-6</h4>
+          </div>
+        </div>
+        <div class="row" style="margin: 10px;">
+          <div ng-repeat="food in day.foods" class="day-food-item">
+            <span style="cursor: pointer" ng-click="removeFood($index)">
+              &times;
+            </span>
+            <input  type="text"
+                    ng-model="food.selectedWeight.amount"
+                    ng-change="recalculate()">
+            <select ng-options="i as food.weights[i].unit for i in 0 | range:food.weights.length"
+                    ng-model="food.selectedWeight.index"
+                    ng-change="updateUnit(food);">
+            </select>
+            {{ food.description }}
+          </div>
+        </div>
+        <div class="row" style="margin: 10px; text-align: center">
+          <button type="button"
+                  class="btn btn-primary btn-lg track-save-button"
+                  ng-click="saveDay()">
+            Save
+          </button>
+          <h4 ng-show="saving">Saving...</h4>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

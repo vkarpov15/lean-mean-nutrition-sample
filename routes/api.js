@@ -17,7 +17,7 @@ exports.day = {
         return res.json(400, { error : "Invalid date" });
       }
 
-      Day.findOne({ username : username, date : date.toDate() }, function(error, day) {
+      Day.findOne({ user : username, date : date.toDate() }, function(error, day) {
         if (error) {
           res.json(500, { error : error });
         } else if (!day) {
@@ -40,7 +40,7 @@ exports.day = {
       }
 
       Day.update(
-        { username : username, date : date.toDate() },
+        { user : username, date : date.toDate() },
         { $set : { foods : req.body.foods } },
         { upsert : true },
         function(error, result) {
