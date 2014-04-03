@@ -6,6 +6,9 @@ exports.appModule = angular.module("LeanMEAN", ['ngRoute']);
 exports.appModule.filter('flatten', require('./filters.common').flattenFactory);
 exports.appModule.filter('range', require('./filters.common').rangeFactory);
 
+exports.appModule.controller('LoginController',
+  require('./login_controller.js').LoginController);
+
 exports.appModule.config(function($routeProvider) {
   $routeProvider.
     when('/', {

@@ -7,6 +7,9 @@ exports.appModule = angular.module("LeanMEAN", ['ngRoute']);
 exports.appModule.filter('flatten', require('./filters.common').flattenFactory);
 exports.appModule.filter('range', require('./filters.common').rangeFactory);
 
+exports.appModule.controller('LoginController',
+  require('./login_controller.js').LoginController);
+
 exports.appModule.config(function($routeProvider) {
   $routeProvider.
     when('/', {
@@ -17,7 +20,7 @@ exports.appModule.config(function($routeProvider) {
       controller : require('./track_controller.js').TrackController
     });
 });
-},{"./angular-route.1.2.10.js":2,"./filters.common":3,"./track_controller.js":4,"angular":6}],2:[function(require,module,exports){
+},{"./angular-route.1.2.10.js":2,"./filters.common":3,"./login_controller.js":4,"./track_controller.js":5,"angular":7}],2:[function(require,module,exports){
 
 
 /**
@@ -964,11 +967,45 @@ exports.rangeFactory = function() {
     return ret;
   };
 };
-},{"underscore":9}],4:[function(require,module,exports){
+},{"underscore":10}],4:[function(require,module,exports){
+exports.LoginController = function($scope, $http, $window) {
+  var RELOAD_EVERY_MS = 1000 * 60 * 60;
+
+  $scope.user = {};
+  $scope.loggedIn = false;
+
+  $scope.loadUser = function(callback) {
+    $http.get('/api/me').
+      success(function(data) {
+        $scope.user = data.user;
+        $scope.loggedIn = data.user ? !!data.user._id : false;
+        if (callback) {
+          callback($scope.loggedIn);
+        }
+      });
+  };
+
+  $scope.loadUser();
+
+  var loadUserAndTimeout = function() {
+    // If user has timed out, send them to Twitter for auth
+    $scope.loadUser(function(loggedIn) {
+      if (!loggedIn) {
+        $window.location.href = '/auth/twitter';
+      }
+    });
+
+    // Reload user data 
+    setTimeout(loadUserAndTimeout, RELOAD_EVERY_MS);
+  };
+
+  setTimeout(loadUserAndTimeout, RELOAD_EVERY_MS);
+};
+},{}],5:[function(require,module,exports){
 var moment = require('moment');
 var calculations = require('../common/calculations.js');
 
-exports.TrackController = function($scope, $http) {
+exports.TrackController = function($scope, $http, $window) {
   $scope.date = moment.utc({ hour : 0 });
 
   $scope.dayLoading = false;
@@ -986,6 +1023,9 @@ exports.TrackController = function($scope, $http) {
       }).
       error(function(data) {
         $scope.dayLoading = false;
+        if (data.redirect) {
+          $window.location.href = data.redirect;
+        }
       });
   }
 
@@ -1014,7 +1054,6 @@ exports.TrackController = function($scope, $http) {
       }).
       error(function(data) {
         $scope.searchLoading = false;
-        console.log(JSON.stringify(data));
       });
   };
 
@@ -1029,6 +1068,9 @@ exports.TrackController = function($scope, $http) {
       error(function(data) {
         $scope.saving = false;
         console.log("Failed");
+        if (data.redirect) {
+          $window.location.href = data.redirect;
+        }
       });
   };
 
@@ -1073,7 +1115,7 @@ exports.TrackController = function($scope, $http) {
   $scope.loadDay();
 };
 
-},{"../common/calculations.js":5,"moment":8}],5:[function(require,module,exports){
+},{"../common/calculations.js":6,"moment":9}],6:[function(require,module,exports){
 var _ = require('underscore');
 
 exports.computeUINutrientsPer100G = function(nutrients) {
@@ -1120,12 +1162,12 @@ exports.computeUINutrientsForDay = function(day) {
 
   return computed;
 };
-},{"underscore":9}],6:[function(require,module,exports){
+},{"underscore":10}],7:[function(require,module,exports){
 require('./lib/angular.min.js');
 
 module.exports = angular;
 
-},{"./lib/angular.min.js":7}],7:[function(require,module,exports){
+},{"./lib/angular.min.js":8}],8:[function(require,module,exports){
 /*
  AngularJS v1.2.10
  (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -1329,7 +1371,7 @@ ngInit:te,ngNonBindable:ue,ngPluralize:ve,ngRepeat:we,ngShow:xe,ngStyle:ze,ngSwi
 $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:Id})}])})(Ca);A(Q).ready(function(){Tc(Q,Zb)})})(window,document);!angular.$$csp()&&angular.element(document).find("head").prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}</style>');
 //# sourceMappingURL=angular.min.js.map
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 //! moment.js
 //! version : 2.4.0
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -3645,7 +3687,7 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
     }
 }).call(this);
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 //     Underscore.js 1.5.2
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -4923,4 +4965,4 @@ $q:zd,$sce:Fd,$sceDelegate:Ed,$sniffer:Gd,$templateCache:hd,$timeout:Hd,$window:
 
 }).call(this);
 
-},{}]},{},[1,2,3,4])
+},{}]},{},[1,2,3,4,5])

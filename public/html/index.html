@@ -10,7 +10,7 @@
     <script src="/javascripts/all.js"></script>
   </head>
 
-  <body>
+  <body ng-controller="LoginController">
     <header>
       <nav class="navbar navbar-inverse">
       <div class="container">
@@ -27,27 +27,27 @@
               Home
             </a>
           </li>
-          <li ng-show="true">
+          <li ng-show="loggedIn">
             <a href="#track">
               <i class="fa fa-book"></i>
               Track
             </a>
           </li>
-          <li ng-show="false">
+          <li ng-show="!loggedIn">
             <a href="/auth/twitter">
               <i class="fa fa-lock"></i>
               Log In
             </a>
           </li>
-          <li ng-show="true" class="dropdown">
+          <li ng-show="loggedIn" class="dropdown">
             <a style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-user"></i>
-              vkarpov15
+              {{ user.username }}
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
               <li>
-                <a href="/">
+                <a href="/logout">
                   Logout
                 </a>
               </li>

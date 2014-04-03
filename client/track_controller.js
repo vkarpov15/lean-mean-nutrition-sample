@@ -1,7 +1,7 @@
 var moment = require('moment');
 var calculations = require('../common/calculations.js');
 
-exports.TrackController = function($scope, $http) {
+exports.TrackController = function($scope, $http, $window) {
   $scope.date = moment.utc({ hour : 0 });
 
   $scope.dayLoading = false;
@@ -19,6 +19,9 @@ exports.TrackController = function($scope, $http) {
       }).
       error(function(data) {
         $scope.dayLoading = false;
+        if (data.redirect) {
+          $window.location.href = data.redirect;
+        }
       });
   }
 
@@ -47,7 +50,6 @@ exports.TrackController = function($scope, $http) {
       }).
       error(function(data) {
         $scope.searchLoading = false;
-        console.log(JSON.stringify(data));
       });
   };
 
@@ -62,6 +64,9 @@ exports.TrackController = function($scope, $http) {
       error(function(data) {
         $scope.saving = false;
         console.log("Failed");
+        if (data.redirect) {
+          $window.location.href = data.redirect;
+        }
       });
   };
 

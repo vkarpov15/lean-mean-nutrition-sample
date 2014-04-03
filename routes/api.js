@@ -8,6 +8,14 @@ exports.index = function(fs) {
   };
 };
 
+exports.user = {
+  get : function() {
+    return function(req, res) {
+      res.json({ user : req.user });
+    };
+  }
+};
+
 exports.day = {
   get : function(Day) {
     return function(req, res) {
