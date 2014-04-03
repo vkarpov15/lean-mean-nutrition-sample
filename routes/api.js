@@ -1,5 +1,13 @@
 var moment = require('moment');
 
+exports.index = function(fs) {
+  var content = fs.readFileSync('./public/html/index.html');
+  return function(req, res) {
+    res.set('Content-Type', 'text/html');
+    res.send(content);
+  };
+};
+
 exports.day = {
   get : function(Day) {
     return function(req, res) {

@@ -26,13 +26,7 @@ var di = omni();
 require('./dependencies/setup.js').createDependencies(di);
 omni.addInjectToFunctionPrototype();
 
-app.get('/', function(FoodItem) {
-  return function(req, res) {
-    FoodItem.count({}, function(error, count) {
-      res.json({ itemsCount : count });
-    });
-  };
-}.inject(di));
+app.get('/', api.index.inject(di));
 
 // API routes
 app.get('/api/day/:date', api.day.get.inject(di));
