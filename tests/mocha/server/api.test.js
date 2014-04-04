@@ -20,6 +20,9 @@ describe("Day API", function() {
         },
         body : {
           foods : []
+        },
+        user : {
+          username : "valeri.karpov"
         }
       };
 
@@ -33,7 +36,7 @@ describe("Day API", function() {
       route(req, res);
       di.inject(function(Day) {
         assert.equal(1, Day.update.calls.length);
-        assert.equal("vkarpov15", Day.update.calls[0].query.user);
+        assert.equal("valeri.karpov", Day.update.calls[0].query.user);
         assert.equal(today,
           Day.update.calls[0].query.date.toISOString());
       });

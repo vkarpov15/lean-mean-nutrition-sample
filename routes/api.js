@@ -19,7 +19,7 @@ exports.user = {
 exports.day = {
   get : function(Day) {
     return function(req, res) {
-      var username = "vkarpov15";
+      var username = req.user.username;
       var date = moment.utc(req.params.date);
       if (!date.isValid()) {
         return res.json(400, { error : "Invalid date" });
@@ -41,7 +41,7 @@ exports.day = {
   },
   put : function(Day) {
     return function(req, res) {
-      var username = "vkarpov15";
+      var username = req.user.username;
       var date = moment.utc(req.params.date);
       if (!date.isValid()) {
         return res.json(400, { error : "Invalid date" });
