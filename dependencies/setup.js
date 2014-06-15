@@ -33,14 +33,6 @@ exports.createDependencies = function(di) {
         }
       },
       {
-        name : "foodItem",
-        factory : function() {
-          return {
-            connection : function() { return conn.collection('nutrition'); }
-          };
-        }
-      },
-      {
         name : "User",
         factory : function() {
           var schema = require('../models/user.js').CreateUserSchema();

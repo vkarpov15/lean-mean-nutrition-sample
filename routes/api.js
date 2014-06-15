@@ -62,20 +62,19 @@ exports.day = {
   }
 }
 
-/* Because MongooseJS doesn't quite support sorting by text search score
- * just yet, just use the NodeJS driver directly */
-exports.searchFood = function(foodItem) {
+/* Mongoose >= 3.8.9 supports text search */
+exports.searchFood = function(FoodItem) {
   return function(req, res) {
     var search = req.params.search;
 
-    foodItem.connection().
+    FoodItem.
       find(
         { $text : { $search : search } },
         { score : { $meta: "textScore" } }
       ).
       sort({ score: { $meta : "textScore" } }).
       limit(10).
-      toArray(function(error, foodItems) {
+      exec(function(error, foodItems) {
         if (error) {
           res.json(500, { error : error });
         } else {
